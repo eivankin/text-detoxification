@@ -1,7 +1,29 @@
+from functools import wraps
+import time
+from typing import Callable
+
 import openai
 
 from src.models.abstract import BaseModel
 
+def rpm_limiter(requests_per_minute: int = 3) -> Callable[[Callable], Callable]:
+    seconds_per_requests = 60 / requests_per_minute
+    def decorator(f: Callable) -> Callable:
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            current_time = time.time()
+            if decorated.request_after > current_time:
+                time.sleep(decorated.request_after - current_time)
+
+            start_time = time.time()
+            result = f(*args, **kwargs)
+            decorated.request_after = start_time + seconds_per_requests
+            return result
+
+        decorated.request_after = 0
+
+        return decorated
+    return decorator
 
 class ZeroShotModel(BaseModel):
     def __init__(self, api_key: str, model_name: str = "text-davinci-003"):
@@ -19,6 +41,7 @@ class ZeroShotModel(BaseModel):
             "by line breaks."
         )
 
+    @rpm_limiter()
     def _send_req(self, prompt: str) -> list[str]:
         response = openai.Completion.create(
             engine=self.model_name,
@@ -57,7 +80,3 @@ class FewShotModel(ZeroShotModel):
             + "\nInput sentences: {input}\nParaphrased and less toxic sentences:\n"
         )
         self.multiple_template = self.single_template
-
-if __name__ == '__main__':
-    # TODO CLI
-    ...

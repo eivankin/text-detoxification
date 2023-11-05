@@ -76,6 +76,8 @@ This model demonstrated the best non-toxicity and similarity scores among other 
 | Mean Similarity   | 0.506                          |
 | Mean Non-toxicity | 0.750                          |
 
+Unfortunately, this solution fails sometimes because LLM breaks the output format.
+
 ## Few-shot learning
 
 What if we provide some examples for LLM? Would it perform better?
@@ -90,12 +92,17 @@ Input sentences:
 {input_sentences}
 ```
 
-| Metric            | Value on test set (96 samples) |
-|-------------------|--------------------------------|
-| Mean BLEU         | 0.152                          |
-| Mean Similarity   | 0.532                          |
-| Mean Non-toxicity | 0.688                          |
+| Metric            | Value on test set (192 samples) |
+|-------------------|---------------------------------|
+| Mean BLEU         | 0.148                           |
+| Mean Similarity   | 0.532                           |
+| Mean Non-toxicity | 0.625                           |
 
-Few-shot technique improved BLEU and similarity scores, but non-toxicity score decreased.
-I think choosing pairs with greater toxicity score difference as examples may help. Also, I would
+Few-shot technique improved BLEU and similarity scores, but non-toxicity score decreased. Also, I
+would
 test the last two models with more data.
+
+I have added `rpm_limiter` decorator to satisfy the API request rate limit and was able to test both
+OpenAI-based solutions with more data.
+Zero-shot one tends to fail due to the problems with output format, while the second one works fine.
+Using training examples with the greater toxicity decrease did not help with non-toxicity score. 

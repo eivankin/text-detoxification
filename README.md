@@ -15,3 +15,5 @@
    ```shell
    python -m src.data.profanity
    ```
+### Running the inference
+Refer to notebooks.
