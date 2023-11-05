@@ -104,5 +104,5 @@ test the last two models with more data.
 
 I have added `rpm_limiter` decorator to satisfy the API request rate limit and was able to test both
 OpenAI-based solutions with more data.
-Zero-shot one tends to fail due to the problems with output format, while the second one works fine.
+Zero-shot one tends to fail due to the problems with output format, while the second one works fine almost every time.
 Using training examples with the greater toxicity decrease did not help with non-toxicity score. 
