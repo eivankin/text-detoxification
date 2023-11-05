@@ -11,12 +11,13 @@ nltk.download("punkt")
 
 
 class ProfanityFilter(BaseModel):
-    def __init__(self):
+    def __init__(self,  blacklist_path: Path):
         self.blacklist = set()
+        self._load_blacklist(blacklist_path)
 
     def predict_single(self, input_sentence: str) -> str:
         if not self.blacklist:
-            raise ValueError("blacklist is not loaded, call `load` first")
+            raise ValueError("empty blacklist")
 
         words = word_tokenize(input_sentence)
 
@@ -32,13 +33,7 @@ class ProfanityFilter(BaseModel):
 
         return censored_sentence
 
-    def predict(self, inputs: list[str]) -> list[str]:
-        return [self.predict_single(s) for s in inputs]
-
-    def train(self, inputs: list[str], target: list[str]) -> list[str]:
-        return self.predict(inputs)
-
-    def load(self, from_path: Path) -> None:
+    def _load_blacklist(self, from_path: Path) -> None:
         self.blacklist.clear()
         with open(from_path, "r") as file:
             for line in file:
@@ -46,6 +41,6 @@ class ProfanityFilter(BaseModel):
 
 
 if __name__ == "__main__":
-    pf = ProfanityFilter()
-    pf.load(Path("./data/interim/bad_words.txt"))
+    # TODO: cli interface
+    pf = ProfanityFilter(Path("./data/interim/bad_words.txt"))
     print(pf.predict_single("this shit fucking sucks"))
