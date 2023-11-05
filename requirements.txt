@@ -9,3 +9,4 @@ numpy~=1.23.5
 torchmetrics~=1.0.1
 openai~=0.28.1
 python-dotenv~=1.0.0
+typer~=0.9.0

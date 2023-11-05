@@ -1,7 +1,7 @@
-from argparse import ArgumentParser
 from pathlib import Path
 
 import pandas as pd
+import typer
 
 from src.config import INTERIM_DATA_DIR, RAW_DATA_DIR
 from src.data.download_paranmt import read_dataset
@@ -24,13 +24,13 @@ def swap_translation_direction(df: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("input_df", type=Path, default=RAW_DATA_DIR / "filtered.tsv")
-    parser.add_argument(
-        "output_path", type=Path, default=INTERIM_DATA_DIR / "swapped.csv"
-    )
+def preprocess_dataset(input_dataframe: Path = RAW_DATA_DIR / "filtered.tsv",
+                       output_path: Path = INTERIM_DATA_DIR / "swapped.csv"):
+    """This script swaps translation with reference in given dictionary
+    if `trn_tox` > `ref_tox` and saves it to given path."""
+    df = read_dataset(input_dataframe)
+    swap_translation_direction(df).to_csv(output_path, index=False)
 
-    args = parser.parse_args()
-    df = read_dataset(args.input_df)
-    swap_translation_direction(df).to_csv(args.output_path, index=False)
+
+if __name__ == "__main__":
+    typer.run(preprocess_dataset)

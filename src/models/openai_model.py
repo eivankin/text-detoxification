@@ -57,3 +57,7 @@ class FewShotModel(ZeroShotModel):
             + "\nInput sentences: {input}\nParaphrased and less toxic sentences:\n"
         )
         self.multiple_template = self.single_template
+
+if __name__ == '__main__':
+    # TODO CLI
+    ...

@@ -2,16 +2,20 @@
 This script downloads list of English profanities and
 transforms it into a table with single column.
 """
+from pathlib import Path
 
 import pandas as pd
 import wget
+import typer
 
 from src.config import EXTERNAL_DATA_DIR, INTERIM_DATA_DIR
 
 DOWNLOAD_URL = "https://github.com/surge-ai/profanity/raw/main/profanity_en.csv"
 
-if __name__ == "__main__":
-    file_name = wget.download(DOWNLOAD_URL, out=str(EXTERNAL_DATA_DIR))
+
+def download_profanity(download_url: str = DOWNLOAD_URL, save_path: Path = EXTERNAL_DATA_DIR,
+                       preprocessed_file: Path = INTERIM_DATA_DIR / "bad_words.txt"):
+    file_name = wget.download(download_url, out=str(save_path))
     df = pd.read_csv(file_name)
     result = pd.concat(
         [
@@ -23,6 +27,10 @@ if __name__ == "__main__":
     ).unique()
     (
         pd.DataFrame(result).to_csv(
-            INTERIM_DATA_DIR / "bad_words.txt", index=False, header=False
+            preprocessed_file, index=False, header=False
         )
     )
+
+
+if __name__ == '__main__':
+    typer.run(download_profanity)
