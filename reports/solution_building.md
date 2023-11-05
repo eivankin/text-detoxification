@@ -12,29 +12,34 @@ in `torchmetrics` to evaluate it.
 ## Baseline #0: Identity
 
 As a first baseline I decided to implement a model that just returns input as prediction, so I would
-get the lowest BLEU and non-toxicity scores for sanity checks in more complex models. However, this
+get the lowest scores for sanity checks in more complex models. However, this
 model achieved the best similarity :-)
 
-| Metric            | Value on test set |
-|-------------------|-------------------|
-| Mean BLEU         | 0.173             |
-| Mean Similarity   | 1.0               |
-| Mean Non-toxicity | 0.129             |
+| Metric            | Value on test set (5% of samples) |
+|-------------------|-----------------------------------|
+| Mean BLEU         | 0.173                             |
+| Mean Similarity   | 1.0                               |
+| Mean Non-toxicity | 0.129                             |
 
 ## Baseline #1: Profanity filter
 
 My second idea was to try another simple approach: just removing profanities from sentences. I used
 word list from [here](https://github.com/surge-ai/profanity/blob/main/profanity_en.csv), but took
-only single-word examples. Also, I am using lemmatizer from `nltk` to match different forms of word.
+only single-word examples. Also, I am using lemmatizer from `nltk` to match different forms of a
+word.
 As a result, non-toxicity score significantly increased, while similarity dropped dramatically. BLEU
 score is noticeable smaller than in previous baseline as well.
 
-| Metric            | Value on test set |
-|-------------------|-------------------|
-| Mean BLEU         | 0.102             |
-| Mean Similarity   | 0.456             |
-| Mean Non-toxicity | 0.507             |
+| Metric            | Value on test set (5% of samples) |
+|-------------------|-----------------------------------|
+| Mean BLEU         | 0.102                             |
+| Mean Similarity   | 0.456                             |
+| Mean Non-toxicity | 0.507                             |
 
-## Fine-tune T5
+## Use T5 model fine-tuned on ParaNMT
+
+Fortunately, I was able to find
+a [T5 model already trained on ParaNMT dataset](https://huggingface.co/s-nlp/t5-paranmt-detox), so I
+do not need to fine-tune it by myself.
 
 ## References
