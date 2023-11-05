@@ -5,13 +5,21 @@ into the `./data/raw` directory and unpacks it without keeping the source archiv
 
 import os
 import zipfile
+from pathlib import Path
 
+import pandas as pd
 import wget
 
 from src.config import RAW_DATA_DIR
 
 # From task description
 DOWNLOAD_URL = "https://github.com/skoltech-nlp/detox/releases/download/emnlp2021/filtered_paranmt.zip"
+
+
+def read_dataset(input_path: Path) -> pd.DataFrame:
+    """Reads ParaNMT-detox corpus into pandas dataframe and sets correct index column"""
+    return pd.read_csv(input_path, sep="\t", index_col=(0,))
+
 
 if __name__ == "__main__":
     file_name = wget.download(DOWNLOAD_URL, out=str(RAW_DATA_DIR))
