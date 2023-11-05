@@ -41,5 +41,61 @@ score is noticeable smaller than in previous baseline as well.
 Fortunately, I was able to find
 a [T5 model already trained on ParaNMT dataset](https://huggingface.co/s-nlp/t5-paranmt-detox), so I
 do not need to fine-tune it by myself.
+This model shows better translation quality indicated by higher BLEU and non-toxicity, but performs
+slightly worse than the second baseline in terms of text similarity.
 
-## References
+| Metric            | Value on test set (0.5% of samples) |
+|-------------------|-------------------------------------|
+| Mean BLEU         | 0.204                               |
+| Mean Similarity   | 0.421                               |
+| Mean Non-toxicity | 0.675                               |
+
+## Zero-shot learning with OpenAI LLM
+
+Why do we even need to train or fine-tune models for this task? Let us just ask ChatGPT (I actually
+used `text-davinci-003`) to do all the work! I used the following prompt templates:
+
+1. For one sentence:
+    ```
+   Paraphrase the following sentence to make it less toxic:
+   ```{input_sentence}```
+   Output only the result sentence.
+   ```
+2. For multiple sentences:
+    ```
+   Paraphrase the following sentences to make them less toxic:
+   ```{all_sentences_separated_by_line_breaks}```
+   Output only the result sentences separated by line breaks.
+   ```
+
+This model demonstrated the best non-toxicity and similarity scores among other solutions so far.
+
+| Metric            | Value on test set (96 samples) |
+|-------------------|--------------------------------|
+| Mean BLEU         | 0.122                          |
+| Mean Similarity   | 0.506                          |
+| Mean Non-toxicity | 0.750                          |
+
+## Few-shot learning
+
+What if we provide some examples for LLM? Would it perform better?
+I used the following prompt template:
+
+```
+Input sentences:
+{reference_examples}
+Paraphrased and less toxic:
+{translated_examples}
+Input sentences:
+{input_sentences}
+```
+
+| Metric            | Value on test set (96 samples) |
+|-------------------|--------------------------------|
+| Mean BLEU         | 0.152                          |
+| Mean Similarity   | 0.532                          |
+| Mean Non-toxicity | 0.688                          |
+
+Few-shot technique improved BLEU and similarity scores, but non-toxicity score decreased.
+I think choosing pairs with greater toxicity score difference as examples may help. Also, I would
+test the last two models with more data.

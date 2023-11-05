@@ -11,7 +11,7 @@ nltk.download("punkt")
 
 
 class ProfanityFilter(BaseModel):
-    def __init__(self,  blacklist_path: Path):
+    def __init__(self, blacklist_path: Path):
         self.blacklist = set()
         self._load_blacklist(blacklist_path)
 

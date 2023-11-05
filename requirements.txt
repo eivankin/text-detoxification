@@ -7,3 +7,5 @@ transformers~=4.33.1
 tqdm~=4.65.0
 numpy~=1.23.5
 torchmetrics~=1.0.1
+openai~=0.28.1
+python-dotenv~=1.0.0
