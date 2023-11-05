@@ -1,6 +1,7 @@
-import pandas as pd
 from argparse import ArgumentParser
 from pathlib import Path
+
+import pandas as pd
 
 from src.config import INTERIM_DATA_DIR, RAW_DATA_DIR
 from src.data.download_paranmt import read_dataset

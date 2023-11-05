@@ -1,13 +1,13 @@
 from pathlib import Path
 
 import nltk
-from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 
 from src.models.abstract import BaseModel
 
-nltk.download('wordnet')
-nltk.download('punkt')
+nltk.download("wordnet")
+nltk.download("punkt")
 
 
 class ProfanityFilter(BaseModel):
@@ -45,7 +45,7 @@ class ProfanityFilter(BaseModel):
                 self.blacklist.add(line.strip().lower())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pf = ProfanityFilter()
     pf.load(Path("./data/interim/bad_words.txt"))
     print(pf.predict_single("this shit fucking sucks"))

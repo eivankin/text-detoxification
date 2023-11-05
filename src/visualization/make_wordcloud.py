@@ -1,9 +1,9 @@
 import re
 from collections import Counter
 
+import nltk.corpus
 import pandas as pd
 import wordcloud
-import nltk.corpus
 
 nltk.download("stopwords", quiet=True)
 stopwords = set(nltk.corpus.stopwords.words("english"))
